@@ -49,7 +49,7 @@ export default function Home() {
       <header className="border-b border-zinc-800 sticky top-0 bg-black z-50">
         <div className="max-w-screen-xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 font-mono text-sm tracking-tighter">
-            <span className="w-3 h-3 bg-zinc-100"></span>
+            <img src="/logo.png" alt="VeriJob AI" className="w-8 h-8 object-contain" />
             VERIJOB_AI // V1.0
           </div>
           <div className="flex items-center gap-6">

@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'VeriJob AI | Ghost Job Verification',
   description: 'Detect ghost jobs with AI-powered analysis.',
+  icons: {
+    icon: '/logo.png', // Using logo.png as it is a high-res PNG
+  },
 };
 
 export default function RootLayout({
