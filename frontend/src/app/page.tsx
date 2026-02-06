@@ -18,10 +18,10 @@ export default function Home() {
     e.preventDefault();
     if (!url) return;
     setLoading(true);
-    setResult(null);
+    setResult({ status: 'Analyzed', score: 0, details: 'Processing...' });
 
     try {
-      const res = await fetch('http://localhost:8000/verify', {
+      const res = await fetch('https://verijob-ai.onrender.com/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url, content }),

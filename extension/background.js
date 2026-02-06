@@ -1,7 +1,7 @@
 // background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "verifyJob") {
-        fetch("http://localhost:8000/verify", {
+        fetch("https://verijob-ai.onrender.com/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request.data)

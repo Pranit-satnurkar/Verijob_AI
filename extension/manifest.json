@@ -9,6 +9,7 @@
     ],
     "host_permissions": [
         "http://localhost:8000/*",
+        "https://verijob-ai.onrender.com/*",
         "*://*.linkedin.com/*",
         "*://*.indeed.com/*"
     ],
