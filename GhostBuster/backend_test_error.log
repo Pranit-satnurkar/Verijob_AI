@@ -1,0 +1,25 @@
+C:\Users\prani\AppData\Roaming\Python\Python314\site-packages\langsmith\schemas.py:21: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1 import (
+============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Data Analyst\Project\GhostBuster\backend
+configfile: pytest.ini
+plugins: anyio-4.12.1, langsmith-0.3.45, asyncio-1.3.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 0 items / 1 error
+
+=================================== ERRORS ====================================
+____________________ ERROR collecting tests/test_agent.py _____________________
+ImportError while importing test module 'C:\Data Analyst\Project\GhostBuster\backend\tests\test_agent.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_agent.py:3: in <module>
+    from agent import agent_graph, AgentState
+E   ModuleNotFoundError: No module named 'agent'
+=========================== short test summary info ===========================
+ERROR backend\tests\test_agent.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+============================== 1 error in 0.25s ===============================

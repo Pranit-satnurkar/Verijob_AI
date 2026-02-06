@@ -1,0 +1,23 @@
+DEBUG: Tools initialized. Tavily Key Present: True
+Starting Full Flow Test...
+
+1. Testing Metadata Extraction...
+Extraction Result: {'llm_extracted': 'Since the text does not explicitly mention the posted date and source, I will make some assumptions based on the provided information.\n\nAssuming today\'s date is 2024-09-16, I will infer the posted date as \'not specified\' since there is no relative date mentioned.\n\nThe source can be inferred as the \'Company Site\' since the URL provided is the company\'s website (http://tcs.com/job).\n\nHere is the extracted data in JSON format:\n\n```json\n{\n  "title": "Data Analyst",\n  "company": "Tata Consultancy Services (TCS)",\n  "location": "Mumbai, India",\n  "posted_date": "not specified",\n  "source": "Company Site"\n}\n```', 'title': 'Data Analyst', 'company': 'Tata Consultancy Services (TCS)', 'location': 'Mumbai, India', 'posted_date': 'not specified', 'source': 'Company Site'}
+
+2. Testing Verification Agent...
+📥 Received content from extension for http://tcs.com/job (210 chars)
+🔎 Searching intelligence for: Tata Consultancy Services (TCS)
+DEBUG: Agent Result Keys: dict_keys(['url', 'metadata', 'health_data', 'health_links', 'reddit_data', 'reddit_links', 'analysis', 'temporal_analysis', 'final_score', 'final_reasoning'])
+DEBUG: Health Links: [{'title': 'TCS 2025: Layoffs, pay hikes, and mega CXO salaries ...', 'url': 'https://www.storyboard18.com/how-it-works/tcs-2025-layoffs-pay-hikes-and-mega-cxo-salaries-explained-78529.htm'}, {'title': 'TCS Likely To Suspend Salary Hikes, Freeze Hiring Amid ...', 'url': 'https://www.news18.com/business/tcs-likely-to-suspend-salary-hikes-freeze-hiring-amid-cost-cutting-drive-report-9472998.html'}, {'title': 'TCS Layoffs 2025: 12,000 Jobs Cut | AI Transformation ... - YouTube', 'url': 'https://www.youtube.com/watch?v=BuGHx11mPW4'}]
+DEBUG: Reddit Links: [{'title': 'TCS (Tata Consultancy Services) Review - and WITCH in ...', 'url': 'https://www.reddit.com/r/cscareerquestions/comments/eweh64/tcs_tata_consultancy_services_review_and_witch_in/'}, {'title': 'Got Scammed by the company in the name of TCS ...', 'url': 'https://www.reddit.com/r/developersIndia/comments/1do1nd0/got_scammed_by_the_company_in_the_name_of_tcs/'}, {'title': 'Attended a TCS interview—got gaslit, lowballed, and ...', 'url': 'https://www.reddit.com/r/developersIndia/comments/1k698xf/attended_a_tcs_interviewgot_gaslit_lowballed_and/'}]
+
+--- FINAL RESULT ---
+Company Detected: Tata Consultancy Services (TCS)
+Score: 0
+Sources Count: 6
+ - TCS 2025: Layoffs, pay hikes, and mega CXO salaries ... (https://www.storyboard18.com/how-it-works/tcs-2025-layoffs-pay-hikes-and-mega-cxo-salaries-explained-78529.htm)
+ - TCS Likely To Suspend Salary Hikes, Freeze Hiring Amid ... (https://www.news18.com/business/tcs-likely-to-suspend-salary-hikes-freeze-hiring-amid-cost-cutting-drive-report-9472998.html)
+ - TCS Layoffs 2025: 12,000 Jobs Cut | AI Transformation ... - YouTube (https://www.youtube.com/watch?v=BuGHx11mPW4)
+ - TCS (Tata Consultancy Services) Review - and WITCH in ... (https://www.reddit.com/r/cscareerquestions/comments/eweh64/tcs_tata_consultancy_services_review_and_witch_in/)
+ - Got Scammed by the company in the name of TCS ... (https://www.reddit.com/r/developersIndia/comments/1do1nd0/got_scammed_by_the_company_in_the_name_of_tcs/)
+ - Attended a TCS interview—got gaslit, lowballed, and ... (https://www.reddit.com/r/developersIndia/comments/1k698xf/attended_a_tcs_interviewgot_gaslit_lowballed_and/)

@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+python-jobspy
+playwright
+pydantic
+python-multipart
+pytest
+httpx
+langchain
+langgraph
+langchain-community
+langchain-groq
+tavily-python
+pytest-asyncio
+beautifulsoup4
+python-dotenv

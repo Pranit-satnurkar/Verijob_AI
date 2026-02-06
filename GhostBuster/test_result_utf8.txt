@@ -1,0 +1,24 @@
+DEBUG: Tools initialized. Tavily Key Present: True
+Starting Full Flow Test...
+
+1. Testing Metadata Extraction...
+Extraction Result: {'extraction_raw': 'Since the text does not provide a specific posted date, I will assume it was posted today. However, please note that I\'m an AI and do not have real-time access to the current date. For the purpose of this exercise, I will assume today\'s date is 2024-09-16.\n\nHere is the extracted data in JSON format:\n\n```json\n{\n  "title": "Data Analyst",\n  "company": "Tata Consultancy Services (TCS)",\n  "location": "Mumbai, India",\n  "posted_date": "2024-09-16",\n  "source": "Company Site"\n}\n```\n\nIf you want me to infer the posted date based on a relative date like \'2 days ago\', please provide the relative date and the current date, and I can calculate the posted date accordingly. \n\nFor example, if the text said \'posted 2 days ago\' and today\'s date is 2024-09-16, I would calculate the posted date as 2024-09-14. \n\nPlease let me know if you need any further assistance!'}
+
+2. Testing Verification Agent...
+📥 Received content from extension for http://tcs.com/job (210 chars)
+⚠️ Could not parse metadata key: Expecting value: line 1 column 1 (char 0)
+🔎 Searching intelligence for: Unknown
+DEBUG: Agent Result Keys: dict_keys(['url', 'metadata', 'health_data', 'health_links', 'reddit_data', 'reddit_links', 'analysis', 'temporal_analysis', 'final_score', 'final_reasoning'])
+DEBUG: Health Links: [{'title': 'A comprehensive list of 2025 tech layoffs | TechCrunch', 'url': 'https://techcrunch.com/2025/12/22/tech-layoffs-2025-list/'}, {'title': 'Major tech layoffs: An updated tracker - Information Week', 'url': 'https://www.informationweek.com/it-leadership/tech-company-layoffs-the-covid-tech-bubble-bursts-sep-14'}, {'title': 'Companies that announced Major Layoffs and Hiring ...', 'url': 'https://intellizence.com/insights/layoff-downsizing/major-companies-that-announced-mass-layoffs/'}]
+DEBUG: Reddit Links: [{'title': "Paranoid about a job interview being a scam, but don't ...", 'url': 'https://www.reddit.com/r/jobs/comments/1krx5xp/paranoid_about_a_job_interview_being_a_scam_but/'}, {'title': 'I think I was the victim of a very elaborate fake job ...', 'url': 'https://www.reddit.com/r/recruitinghell/comments/1jwa81e/i_think_i_was_the_victim_of_a_very_elaborate_fake/'}, {'title': 'Extremely elaborate scam or disorganized company? : r/jobs', 'url': 'https://www.reddit.com/r/jobs/comments/jhd1xe/extremely_elaborate_scam_or_disorganized_company/'}]
+
+--- FINAL RESULT ---
+Company Detected: Unknown
+Score: 0
+Sources Count: 6
+ - A comprehensive list of 2025 tech layoffs | TechCrunch (https://techcrunch.com/2025/12/22/tech-layoffs-2025-list/)
+ - Major tech layoffs: An updated tracker - Information Week (https://www.informationweek.com/it-leadership/tech-company-layoffs-the-covid-tech-bubble-bursts-sep-14)
+ - Companies that announced Major Layoffs and Hiring ... (https://intellizence.com/insights/layoff-downsizing/major-companies-that-announced-mass-layoffs/)
+ - Paranoid about a job interview being a scam, but don't ... (https://www.reddit.com/r/jobs/comments/1krx5xp/paranoid_about_a_job_interview_being_a_scam_but/)
+ - I think I was the victim of a very elaborate fake job ... (https://www.reddit.com/r/recruitinghell/comments/1jwa81e/i_think_i_was_the_victim_of_a_very_elaborate_fake/)
+ - Extremely elaborate scam or disorganized company? : r/jobs (https://www.reddit.com/r/jobs/comments/jhd1xe/extremely_elaborate_scam_or_disorganized_company/)

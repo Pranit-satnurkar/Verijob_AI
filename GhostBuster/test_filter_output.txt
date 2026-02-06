@@ -1,0 +1,6 @@
+DEBUG: Tools initialized. Tavily Key Present: False
+Testing filtered search for: Tata Consultancy Services - Data Analyst
+
+--- Health News ---
+
+--- Reddit ---

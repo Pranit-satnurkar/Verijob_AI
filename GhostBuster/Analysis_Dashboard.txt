@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VeriJob AI Analysis Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1e3fae",
+                        "success": "#10B981",
+                        "warning": "#F59E0B",
+                        "danger": "#EF4444",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121520",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(100px, auto);
+            gap: 1.5rem;
+        }
+        .pulse-green {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col">
+<div class="p-6">
+<div class="flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<h1 class="text-lg font-bold tracking-tight">VeriJob AI</h1>
+<p class="text-xs text-slate-500">Analysis Platform</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-lg font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">history</span>
+                    Audit History
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+                    Market Reports
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+                    Community
+                </a>
+<div class="pt-4 pb-2 px-4 uppercase text-[10px] font-bold text-slate-400 tracking-widest">System</div>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800 rounded-xl">
+<div class="size-10 rounded-full overflow-hidden bg-slate-200" data-alt="Professional user profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdrrbv-mivrcpuMdaYr6Z4JlW0SPWNNVWMYn42dT_tPISdBblWeEW2I9NLSvjIF8ax3zELYIquGUCusTNR0WjYJsuYi-afpOZsw5qM3ac60WA1KImINfugVTtDQcPrzD9xSaC4DAANExbEeqapc_0dcrdMa9XJESIrG7shyjLRbPifBeK5JKe5U1BvXV_9QPZSTtT6odEp6XFJvw0ibOljopd6hH1OqfaHs2SyDG0ahx5S1ibVBoO_J3GQhREPsX6HIWWIXnDMo2I')"></div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold truncate">Alex Chen</p>
+<p class="text-xs text-slate-500 truncate">Pro Analyst</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Header -->
+<header class="h-20 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 px-8 flex items-center justify-between">
+<div>
+<h2 class="text-2xl font-bold">Analysis Dashboard</h2>
+<p class="text-sm text-slate-500">Real-time job verification &amp; ghost post detection</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-slate-400 group-focus-within:text-primary transition-colors">link</span>
+<input class="pl-12 pr-32 py-3 w-[450px] bg-slate-100 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl text-sm transition-all" placeholder="Paste LinkedIn, Indeed, or Glassdoor URL..." type="text"/>
+<button class="absolute right-2 px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary/90 transition-colors">
+                            ANALYZE URL
+                        </button>
+</div>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<div class="p-8">
+<!-- Bento Grid -->
+<div class="bento-grid">
+<!-- The Ghost Meter -->
+<div class="col-span-12 lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute top-4 left-6 flex flex-col">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Stability Index</span>
+<span class="text-lg font-bold">The Ghost Meter</span>
+</div>
+<div class="relative mt-8">
+<!-- Circular Gauge SVG -->
+<svg class="size-48" viewbox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="45" stroke="#f1f5f9" stroke-dasharray="283" stroke-dashoffset="0" stroke-width="8"></circle>
+<circle class="transition-all duration-1000" cx="50" cy="50" fill="none" r="45" stroke="#10B981" stroke-dasharray="283" stroke-dashoffset="60" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-5xl font-black text-slate-900 dark:text-white">78%</span>
+<span class="text-xs font-bold text-success">STABLE</span>
+</div>
+</div>
+<div class="mt-6 flex gap-4 w-full">
+<div class="flex-1 bg-slate-50 dark:bg-slate-800 p-3 rounded-lg text-center">
+<p class="text-[10px] text-slate-500 font-bold uppercase">Post Age</p>
+<p class="font-bold">4 Days</p>
+</div>
+<div class="flex-1 bg-slate-50 dark:bg-slate-800 p-3 rounded-lg text-center">
+<p class="text-[10px] text-slate-500 font-bold uppercase">Response Rate</p>
+<p class="font-bold text-success">High</p>
+</div>
+</div>
+<div class="absolute top-4 right-4 pulse-green size-3 bg-success rounded-full"></div>
+</div>
+<!-- Source Match Panel -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold">Source Match</h3>
+<span class="material-symbols-outlined text-primary">hub</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="size-10 bg-blue-100 text-blue-600 rounded flex items-center justify-center font-bold">in</div>
+<div class="flex-1">
+<div class="flex justify-between text-xs mb-1">
+<span>LinkedIn</span>
+<span class="font-bold">Verified</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[95%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-10 bg-red-100 text-red-600 rounded flex items-center justify-center font-bold text-xs uppercase">Ind</div>
+<div class="flex-1">
+<div class="flex justify-between text-xs mb-1">
+<span>Indeed</span>
+<span class="font-bold">Duplicate</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-slate-400 w-[40%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-10 bg-slate-100 text-slate-600 rounded flex items-center justify-center font-bold">C</div>
+<div class="flex-1">
+<div class="flex justify-between text-xs mb-1">
+<span>Direct Career Site</span>
+<span class="font-bold">Active Match</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-success w-[100%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RAG Signal -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-primary text-white rounded-xl p-6 shadow-xl shadow-primary/20">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold">RAG Intelligence</h3>
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div class="space-y-4">
+<div class="p-3 bg-white/10 rounded-lg border border-white/10">
+<p class="text-xs text-white/70 mb-1">AI Inference Output</p>
+<p class="text-sm font-medium">Headcount data matches recent Series B announcement. High likelihood of hiring intent.</p>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-3 bg-white/10 rounded-lg text-center">
+<p class="text-[10px] text-white/70 uppercase">Confidence</p>
+<p class="text-xl font-black">94%</p>
+</div>
+<div class="p-3 bg-white/10 rounded-lg text-center">
+<p class="text-[10px] text-white/70 uppercase">Signals</p>
+<p class="text-xl font-black">12+</p>
+</div>
+</div>
+</div>
+</div>
+<!-- JD Audit Panel -->
+<div class="col-span-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">assignment_turned_in</span>
+<div>
+<h3 class="font-bold">The Evidence Panel: JD Audit</h3>
+<p class="text-xs text-slate-500">Deep structural analysis of the Job Description</p>
+</div>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-[10px] font-bold uppercase">Technical Match</span>
+<span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-[10px] font-bold uppercase">Hiring Velocity</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-4 border border-slate-100 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-800/50">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-success text-sm">check_circle</span>
+<span class="text-xs font-bold uppercase tracking-wide">Scope Specificity</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Detailed tech stack provided (K8s, Go, Terraform). No generic buzzwords detected.</p>
+</div>
+<div class="p-4 border border-slate-100 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-800/50">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-success text-sm">check_circle</span>
+<span class="text-xs font-bold uppercase tracking-wide">Budget Transparency</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Salary range $140k-185k provided. Compliant with local transparency laws.</p>
+</div>
+<div class="p-4 border border-slate-100 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-800/50">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-warning text-sm">error</span>
+<span class="text-xs font-bold uppercase tracking-wide">Manager Presence</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Hiring manager not directly linked. Internal referral system recommended.</p>
+</div>
+</div>
+</div>
+<!-- Community Feed -->
+<div class="col-span-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h3 class="font-bold">Community Verification Feed</h3>
+<button class="text-sm text-primary font-semibold flex items-center gap-1">
+                                View All Feed <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800 text-[10px] font-bold uppercase text-slate-400">
+<tr>
+<th class="px-6 py-4">Company &amp; Role</th>
+<th class="px-6 py-4">Status Tag</th>
+<th class="px-6 py-4">Stability</th>
+<th class="px-6 py-4">Verification</th>
+<th class="px-6 py-4">Audit Time</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-slate-200 shrink-0 overflow-hidden" data-alt="Stripe company logo icon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCnH9R-edrx5eF2Qq-uJvlOq4c7vAC1cM3C-6p7AVPpVLES_ViZLXPW3ICOo-ctk0tRvpCAsLdW_nrb3XTptYAPI0W2ZQ2kC7iIXa_4QT_Uu8yyZsYg1gGvAyx7we8EAxfxUZ8wYCMfSLRB0yLVV0Gx-_3nXBdHEtm3my3Je7nd_THSHiWoAgOiiUlFuzVMsKjP4Mb11Ak7dA9tWeK1VszPfOz_nJubSVOSEgqS9jhtZgcm4ZZ6v_BhbjbkPjD3YAJIBhJW19xOvo8')"></div>
+<div>
+<p class="text-sm font-bold">Senior Product Designer</p>
+<p class="text-xs text-slate-500">Stripe</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-md text-[10px] font-bold bg-success/10 text-success uppercase">Active</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full">
+<div class="h-full bg-success w-[92%]"></div>
+</div>
+<span class="text-xs font-bold">92%</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-sm">group</span>
+<span class="text-xs font-medium">Recruiter Confirmed</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs text-slate-500">2 mins ago</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-slate-200 shrink-0 overflow-hidden" data-alt="Meta company logo icon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAq-mJj49KzI5-MeGv8r67Q-n_odZ0VABc9dvJ7zw_NCMUe8P44Om3848GSKeeC8YHplfFhOqVVyr-QIDWXbz9x17UpRlQIwUTKV7J1mZnRdnd6b0nf2ZApoosvzJFc6HjhqvL9PdP18bDXywHqC_dMC2KBLAoimXTX0IDHu-avfsobsxloEXK8J9YclHonV3Mkjb8ifsrde6ANztWnofH0GdaLl3RaNYLLUWLQUTU1S3eF70m2HyW8v8NB0iiMYg2pa2Vus-qbuPU')"></div>
+<div>
+<p class="text-sm font-bold">Software Engineer, L6</p>
+<p class="text-xs text-slate-500">Meta</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-md text-[10px] font-bold bg-warning/10 text-warning uppercase">Likely Ghost</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full">
+<div class="h-full bg-warning w-[45%]"></div>
+</div>
+<span class="text-xs font-bold">45%</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-sm">warning</span>
+<span class="text-xs font-medium">Auto-Flagged (Age)</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs text-slate-500">14 mins ago</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-slate-200 shrink-0 overflow-hidden" data-alt="Airbnb company logo icon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAk4KjhYhFH3GPJ3Dz3mZDTDJeFzClIDzQLMLr8HCZB0lrTGiuFAfPzwqCs7p6DdvP9BawJyKFG1JoYx2kmwuKkVIsj6lBe-aQ7DsVWbuSPDFP5TlQ5cB2FxOKTtMDjxRVU2Ux8NU_1BqPgf334ptNSXHGdIRaawkQQnP7KGsYwBx8KkB_N05cdJk6_iY2ucicAy2ULJ0NPGILNxbBqdjAz2zkEithLMxk0I2dahnU4_JpEZOG69KQXTSCwu1F3vJ2AApTAm6LRN20')"></div>
+<div>
+<p class="text-sm font-bold">Growth Marketing Lead</p>
+<p class="text-xs text-slate-500">Airbnb</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-md text-[10px] font-bold bg-success/10 text-success uppercase">Active</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full">
+<div class="h-full bg-success w-[88%]"></div>
+</div>
+<span class="text-xs font-bold">88%</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-sm">verified</span>
+<span class="text-xs font-medium">Community Verified</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs text-slate-500">22 mins ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

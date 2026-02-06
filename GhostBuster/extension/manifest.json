@@ -1,0 +1,36 @@
+{
+    "manifest_version": 3,
+    "name": "VeriJob AI - Ghost Job Detector",
+    "version": "1.0",
+    "description": "Detects ghost jobs on LinkedIn and Indeed using VeriJob AI.",
+    "permissions": [
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "http://localhost:8000/*",
+        "*://*.linkedin.com/*",
+        "*://*.indeed.com/*"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "VeriJob AI"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.linkedin.com/*",
+                "*://*.indeed.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "styles.css"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+DEBUG: Tools initialized. Tavily Key Present: True
+Testing filtered search for: Tata Consultancy Services - Data Analyst
+
+--- Health News ---
+ [KEEP] TCS Layoffs: Inside 2025's Bench Period, Skill Gaps & ...
+ [KEEP] TCS Layoffs: Hike Freeze & Senior Hiring Slowdown Rumors
+ [KEEP] TCS cuts 19,700 jobs, shifts to AI, cloud, digital engineering - LinkedIn
+ [KEEP] Tata Consultancy Services faces backlash over layoffs, restructuring
+
+--- Reddit ---
+ [KEEP] Name and Shame: Tata Consulting Services
+ [KEEP] Name and Shame - Tata Consultancy Services
+ [KEEP] Attended a TCS interview—got gaslit, lowballed, and ...
