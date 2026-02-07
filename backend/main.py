@@ -18,6 +18,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+async def startup_event():
+    """
+    Ensure browsers are installed for Playwright on startup.
+    This fixes the 'Executable doesn't exist' error on Render.
+    """
+    import os
+    import subprocess
+    print("🚀 Checking Playwright Browsers...")
+    try:
+        # Check if we can run verify installation or just install
+        # This command is safe to run multiple times (it verifies)
+        subprocess.run(["playwright", "install", "chromium"], check=True)
+        print("✅ Playwright Browsers Installed.")
+    except Exception as e:
+        print(f"⚠️ Failed to auto-install browsers: {e}")
+
 from typing import Optional
 
 class VerifyRequest(BaseModel):
@@ -31,16 +48,16 @@ def read_root():
 from verifier import verify_job_listing
 
 
-from tools import search_jobs
+from tools import search_hiring_signals
 
 @app.get("/feed")
 def get_feed():
     """
-    Returns a list of recent job listings from the web.
+    Returns a list of 'Green Flags' (Hiring Signals).
     """
     try:
-        jobs = search_jobs("Data Analyst jobs") # Default query for now
-        return jobs
+        signals = search_hiring_signals()
+        return signals
     except Exception as e:
         print(f"Feed error: {e}")
         return []

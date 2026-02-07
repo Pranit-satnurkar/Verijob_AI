@@ -34,7 +34,9 @@
         {
             "matches": [
                 "*://*.linkedin.com/*",
-                "*://*.indeed.com/*"
+                "*://*.indeed.com/*",
+                "*://*.naukri.com/*",
+                "*://*.internshala.com/*"
             ],
             "js": [
                 "content.js"

@@ -9,10 +9,9 @@ async def verify_job_listing(url: str, content: Optional[str] = None):
     Orchestrates the verification process using LangGraph Agent.
     """
     # 1. Extract Metadata
-    if content:
+    # Treat empty strings as None to trigger scraping
+    if content and len(content.strip()) > 50:
         print(f"📥 Received content from extension for {url} ({len(content)} chars)")
-        # Use simple structure if content is provided
-        extraction = extract_metadata_from_text(content, url)
         # Use simple structure if content is provided
         extraction = extract_metadata_from_text(content, url)
         metadata = {
@@ -20,6 +19,7 @@ async def verify_job_listing(url: str, content: Optional[str] = None):
             **extraction
         }
     else:
+        print(f"📥 No content provided (or too short). initiating scraping for {url}...")
         metadata = await scrape_job_details(url)
     
     if not metadata:

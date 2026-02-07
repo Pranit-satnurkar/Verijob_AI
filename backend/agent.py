@@ -90,25 +90,42 @@ def score_node(state: AgentState):
     """
     score = 100 # Start perfect
     reasons = []
+
+    # 0. Sanity Check: Is there enough data?
+    scraped_text = state["metadata"].get("scraped_text", "")
+    if not scraped_text or len(scraped_text) < 200:
+        return {
+            "final_score": 0,
+            "final_reasoning": "ERROR: Insufficient job data extracted. Verification incomplete."
+        }
     
-    # 1. Health Check
+    # 1. JD Quality Check (AI-generated / Generic content)
+    from tools import analyze_jd_quality
+    jd_analysis = analyze_jd_quality(scraped_text)
+    if jd_analysis["is_suspicious"]:
+        penalty = 100 - jd_analysis["quality_score"]
+        score -= penalty
+        red_flag_summary = ", ".join(jd_analysis["red_flags"][:2])  # Show top 2
+        reasons.append(f"JD Quality Issues: {red_flag_summary}")
+    
+    # 2. Health Check
     if "layoff" in state["health_data"].lower():
         score -= 30
         reasons.append("Company has recent layoff news.")
         
-    # 2. Reddit Check
+    # 3. Reddit Check
     if "scam" in state["reddit_data"].lower() or "ghosting" in state["reddit_data"].lower():
         score -= 25
         reasons.append("Negative sentiment/scam reports found on Reddit.")
 
-    # 3. JD Analysis
+    # 4. JD Analysis
     # Parse the LLM output (it might be a raw string)
     analysis_raw = state["analysis"].get("raw_analysis", "").lower()
     if "high probability" in analysis_raw or '"ghost_probability": 8' in analysis_raw or '"ghost_probability": 9' in analysis_raw:
         score -= 40
         reasons.append("Job Description matches 'Ghost Job' template patterns.")
 
-    # 4. Temporal
+    # 5. Temporal
     if "WARNING" in state["temporal_analysis"]:
         score -= 50
         reasons.append("Job listing is stale (detected previous year dates).")
@@ -116,6 +133,10 @@ def score_node(state: AgentState):
     # Cap score
     score = max(0, score)
     
+    # Psychological Rule: Never show 100% (User Trust Issue)
+    if score > 95:
+        score = 95
+        
     return {
         "final_score": score,
         "final_reasoning": "; ".join(reasons) if reasons else "Job appears legitimate based on available signals."

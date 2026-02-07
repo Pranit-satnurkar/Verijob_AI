@@ -17,6 +17,120 @@ llm = ChatGroq(
 ) if groq_api_key else None
 
 
+import time
+import random
+
+def safe_tavily_search(query: str, **kwargs) -> Dict[str, Any]:
+    """
+    Wraps Tavily search with retry logic to handle connection resets.
+    """
+    if not tavily_client:
+        return {}
+    
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            return tavily_client.search(query, **kwargs)
+        except Exception as e:
+            print(f"⚠️ Tavily search failed (attempt {attempt+1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                time.sleep(2 ** attempt + random.random()) # Exponential backoff
+            else:
+                print("❌ Max retries reached for Tavily search.")
+                return {} # Return empty on final failure
+    return {}
+
+
+def analyze_jd_quality(jd_text: str) -> Dict[str, Any]:
+    """
+    Analyzes job description quality to detect AI-generated or generic postings.
+    Returns a score (0-100) and list of red flags.
+    """
+    if not jd_text or len(jd_text) < 100:
+        return {"quality_score": 0, "red_flags": ["Insufficient content"], "is_suspicious": True}
+    
+    red_flags = []
+    score = 100
+    
+    # Generic buzzwords that indicate AI-generated or template content
+    generic_phrases = [
+        "rockstar", "ninja", "guru", "wizard", "unicorn",
+        "wear many hats", "fast-paced environment", "work hard play hard",
+        "competitive salary", "exciting opportunity", "dynamic team",
+        "self-starter", "go-getter", "think outside the box"
+    ]
+    
+    # AI-generation indicators
+    ai_indicators = [
+        "as a [role], you will", "the ideal candidate will",
+        "we are looking for a highly motivated", "join our growing team",
+        "this is an exciting opportunity to", "you will be responsible for"
+    ]
+    
+    # Vague requirements (lack of specifics)
+    vague_indicators = [
+        "various tasks", "other duties as assigned", "and more",
+        "etc.", "among other things", "as needed"
+    ]
+    
+    jd_lower = jd_text.lower()
+    
+    # Check for generic buzzwords
+    buzzword_count = sum(1 for phrase in generic_phrases if phrase in jd_lower)
+    if buzzword_count >= 3:
+        red_flags.append(f"Contains {buzzword_count} generic buzzwords")
+        score -= 15
+    
+    # Check for AI-generation patterns
+    ai_pattern_count = sum(1 for phrase in ai_indicators if phrase in jd_lower)
+    if ai_pattern_count >= 3:
+        red_flags.append("Shows AI-generated content patterns")
+        score -= 20
+    
+    # Check for vague language
+    vague_count = sum(1 for phrase in vague_indicators if phrase in jd_lower)
+    if vague_count >= 2:
+        red_flags.append("Contains vague/non-specific requirements")
+        score -= 15
+    
+    # Check for specificity (good signs)
+    specific_indicators = [
+        "salary", "₹", "$", "compensation", "benefits",
+        "team size", "reporting to", "tech stack", "tools:",
+        "years of experience", "degree in", "certification"
+    ]
+    specificity_count = sum(1 for phrase in specific_indicators if phrase in jd_lower)
+    
+    if specificity_count < 2:
+        red_flags.append("Lacks specific details (salary, team, tech stack)")
+        score -= 20
+    
+    # Check for excessive length (AI tends to be verbose)
+    if len(jd_text) > 5000:
+        red_flags.append("Unusually long description (possible AI padding)")
+        score -= 10
+    
+    # Check for repetitive structure
+    sentences = jd_text.split('.')
+    if len(sentences) > 10:
+        # Simple repetition check
+        unique_starts = len(set(s.strip()[:20] for s in sentences if len(s.strip()) > 20))
+        if unique_starts < len(sentences) * 0.7:
+            red_flags.append("Repetitive sentence structure")
+            score -= 15
+    
+    score = max(0, score)
+    is_suspicious = score < 60 or len(red_flags) >= 3
+    
+    return {
+        "quality_score": score,
+        "red_flags": red_flags,
+        "is_suspicious": is_suspicious,
+        "specificity_count": specificity_count
+    }
+
+
+
 def filter_irrelevant_sources(results: List[Dict], company_name: str, job_title: str) -> List[Dict]:
     """
     Uses LLM to filter out search results that are not relevant to the specific company/role.
@@ -76,7 +190,7 @@ def search_company_health(company_name: str, job_title: str = "") -> Dict[str, A
          query = f"{company_name} {job_title} layoffs hiring freeze 2024 2025"
 
     try:
-        response = tavily_client.search(query, search_depth="advanced", max_results=5) # Fetch more, then filter
+        response = safe_tavily_search(query, search_depth="advanced", max_results=5) # Fetch more, then filter
         results = response.get('results', [])
         
         # Filter with LLM
@@ -105,7 +219,7 @@ def search_reddit_sentiment(company_name: str, job_title: str = "") -> Dict[str,
          query = f"site:reddit.com {company_name} {job_title} (scam OR ghosting OR fake job OR interview experience)"
 
     try:
-        response = tavily_client.search(query, search_depth="advanced", max_results=5) # Fetch more
+        response = safe_tavily_search(query, search_depth="advanced", max_results=5) # Fetch more
         results = response.get('results', [])
         
         # Filter
@@ -219,44 +333,58 @@ def extract_metadata_from_text(raw_text: str, url: str) -> Dict[str, Any]:
         print(f"Extraction error: {e}")
         return {}
 
-def search_jobs(query: str = "Data Analyst jobs") -> List[Dict[str, Any]]:
+
+def search_hiring_signals() -> List[Dict[str, Any]]:
     """
-    Searches for recent job listings using Tavily.
+    Searches for 'Green Flags' - signs of active hiring, funding, or expansion.
     """
     if not tavily_client:
         return []
 
-    try:
-        # Search specifically for job listings across major platforms
-        search_query = f"{query} hiring now in India site:linkedin.com/jobs OR site:naukri.com OR site:indeed.com"
-        # Using a broader search query to get more results
-        response = tavily_client.search(search_query, search_depth="advanced", max_results=6)
-        results = response.get('results', [])
-        
-        jobs = []
-        for r in results:
-            title = r['title']
-            company = "Unknown Company"
-            
-            # Simple heuristic to split Title - Company
-            if " - " in title:
-                parts = title.split(" - ")
-                if len(parts) >= 2:
-                    title = parts[0]
-                    company = parts[1]
-            elif "|" in title:
-                parts = title.split("|")
-                if len(parts) >= 2:
-                    title = parts[0]
-                    company = parts[1]
+    signals = []
+    
+    # 3 Distinct queries to get diverse signals
+    queries = [
+        {"q": "companies raising series A B funding 2024 2025 news", "type": "FUNDING"},
+        {"q": "companies mass hiring engineering india 2024 2025", "type": "HIRING SURGE"},
+        {"q": "site:reddit.com received interview offer software engineer india 2025", "type": "INTERVIEWS"}
+    ]
 
-            jobs.append({
-                "title": title[:50], # Truncate for UI
-                "company": company[:30],
-                "url": r['url'],
-                "score": "NEW" 
-            })
-        return jobs
+    try:
+        for q_obj in queries:
+            response = safe_tavily_search(q_obj["q"], search_depth="advanced", max_results=3)
+            results = response.get('results', [])
+            
+            for r in results:
+                title = r['title']
+                # Simple cleaning
+                company = "Unknown"
+                if " - " in title:
+                    company = title.split(" - ")[0]
+                elif "|" in title:
+                    company = title.split("|")[0]
+                else:
+                    # Fallback: Try to find a capitalized word in the title
+                    words = title.split()
+                    for w in words:
+                        if w[0].isupper() and len(w) > 3 and w.lower() not in ["layoffs", "hiring", "news", "report", "funding"]:
+                            company = w
+                            break
+                
+                signals.append({
+                    "company": company[:30],
+                    "title": title[:80], # Headline
+                    "url": r['url'],
+                    "type": q_obj["type"],
+                    "score": "SIGNAL" # Marker for UI
+                })
+        
+        # Shuffle slightly to mix types (optional, but good for feed)
+        import random
+        random.shuffle(signals)
+        return signals[:9] # Return top 9 mixed signals
+
     except Exception as e:
-        print(f"Job search error: {e}")
+        print(f"Signal search error: {e}")
         return []
+
