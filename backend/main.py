@@ -30,6 +30,21 @@ def read_root():
 
 from verifier import verify_job_listing
 
+
+from tools import search_jobs
+
+@app.get("/feed")
+def get_feed():
+    """
+    Returns a list of recent job listings from the web.
+    """
+    try:
+        jobs = search_jobs("Data Analyst jobs") # Default query for now
+        return jobs
+    except Exception as e:
+        print(f"Feed error: {e}")
+        return []
+
 @app.post("/verify")
 async def verify_job(request: VerifyRequest):
     try:
@@ -43,3 +58,4 @@ async def verify_job(request: VerifyRequest):
             "details": f"Internal Error: {str(e)}",
             "traceback": traceback.format_exc()
         }
+

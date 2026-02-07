@@ -157,6 +157,7 @@ def analyze_job_description(jd_text: str) -> Dict[str, Any]:
     except Exception as e:
         return {"error": str(e)}
 
+
 def extract_metadata_from_text(raw_text: str, url: str) -> Dict[str, Any]:
     """
     Uses LLM to extract structured metadata (Title, Company, Date) from raw page text.
@@ -217,3 +218,45 @@ def extract_metadata_from_text(raw_text: str, url: str) -> Dict[str, Any]:
     except Exception as e:
         print(f"Extraction error: {e}")
         return {}
+
+def search_jobs(query: str = "Data Analyst jobs") -> List[Dict[str, Any]]:
+    """
+    Searches for recent job listings using Tavily.
+    """
+    if not tavily_client:
+        return []
+
+    try:
+        # Search specifically for job listings across major platforms
+        search_query = f"{query} hiring now in India site:linkedin.com/jobs OR site:naukri.com OR site:indeed.com"
+        # Using a broader search query to get more results
+        response = tavily_client.search(search_query, search_depth="advanced", max_results=6)
+        results = response.get('results', [])
+        
+        jobs = []
+        for r in results:
+            title = r['title']
+            company = "Unknown Company"
+            
+            # Simple heuristic to split Title - Company
+            if " - " in title:
+                parts = title.split(" - ")
+                if len(parts) >= 2:
+                    title = parts[0]
+                    company = parts[1]
+            elif "|" in title:
+                parts = title.split("|")
+                if len(parts) >= 2:
+                    title = parts[0]
+                    company = parts[1]
+
+            jobs.append({
+                "title": title[:50], # Truncate for UI
+                "company": company[:30],
+                "url": r['url'],
+                "score": "NEW" 
+            })
+        return jobs
+    except Exception as e:
+        print(f"Job search error: {e}")
+        return []

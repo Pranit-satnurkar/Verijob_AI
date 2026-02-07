@@ -187,17 +187,27 @@ export default function Home() {
           <h3 className="font-mono text-sm uppercase text-zinc-500 mb-8">Verified_Feed_Stream</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-zinc-800">
             {recentJobs.slice(0, 6).map((job, i) => (
-              <div key={i} className="p-6 border-b md:border-b-0 md:border-r border-zinc-800 hover:bg-zinc-900 transition-colors group">
+              <a
+                key={i}
+                href={job.url || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-6 border-b md:border-b-0 md:border-r border-zinc-800 hover:bg-zinc-900 transition-colors group block"
+              >
                 <div className="flex justify-between items-start mb-4">
-                  <span className={`font-mono text-xs px-2 py-0.5 border ${job.score > 70 ? 'border-zinc-600 text-zinc-300' : 'border-zinc-800 text-zinc-600'}`}>
-                    SCORE: {job.score}
+                  <span className={`font-mono text-xs px-2 py-0.5 border ${(typeof job.score === 'number' && job.score > 70) ? 'border-zinc-600 text-zinc-300' :
+                      (job.score === 'NEW') ? 'border-blue-900 text-blue-400' :
+                        'border-zinc-800 text-zinc-600'
+                    }`}>
+                    {typeof job.score === 'number' ? `SCORE: ${job.score}` : job.score}
                   </span>
                   <span className="material-symbols-outlined text-zinc-600 text-sm group-hover:text-white transition-colors">arrow_outward</span>
                 </div>
-                <div className="font-bold text-lg mb-1">{job.title}</div>
-                <div className="font-mono text-xs text-zinc-500">{job.company}</div>
-              </div>
+                <div className="font-bold text-lg mb-1 truncate">{job.title}</div>
+                <div className="font-mono text-xs text-zinc-500 truncate">{job.company}</div>
+              </a>
             ))}
+
             {recentJobs.length === 0 && (
               <div className="p-6 col-span-3 text-center font-mono text-xs text-zinc-600">
                 WAITING FOR DATA STREAM...

@@ -19,29 +19,37 @@ export async function submitReport(url: string, reason: string, details: string)
     return { success: true };
 }
 
+
 export async function getVerifiedJobs() {
-    // For demo/dev mode without Supabase, return mock data
-    const mockData = [
-        { title: "Senior Data Scientist", company: "Meta Platforms", score: 92 },
-        { title: "Entry Level QA Tester", company: "Unknown Agency", score: 15 },
-        { title: "Marketing Manager", company: "Netflix", score: 88 },
-        { title: "Remote Data Entry", company: "Global Services Inc", score: 5 },
-    ];
+    const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'https://verijob-ai.onrender.com';
 
-    if (!supabase) return mockData;
+    // 1. Try Supabase first (Stored verified jobs)
+    if (supabase) {
+        try {
+            const { data, error } = await supabase
+                .from('verified_jobs')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(5);
 
-    try {
-        const { data, error } = await supabase
-            .from('verified_jobs')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(5);
-
-        if (error || !data || data.length === 0) {
-            return mockData; // Fallback to mock if DB is empty or fails
+            if (!error && data && data.length > 0) {
+                return data;
+            }
+        } catch (e) {
+            console.error("Supabase fetch error:", e);
         }
-        return data;
+    }
+
+    // 2. Fallback to Live Feed from Backend
+    try {
+        console.log(`Fetching feed from ${BACKEND_URL}/feed`);
+        const res = await fetch(`${BACKEND_URL}/feed`, { next: { revalidate: 3600 } });
+        if (!res.ok) throw new Error('Feed fetch failed');
+        const feedData = await res.json();
+        return feedData;
     } catch (e) {
-        return mockData;
+        console.error("Feed fetch error:", e);
+        return []; // Return empty if everything fails
     }
 }
+
